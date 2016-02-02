@@ -2,11 +2,16 @@
 
 import re
 
-from nltk.corpus import stopwords
-stopwords = frozenset(stopwords.words('english'))
+from nltk.corpus import stopwords as nltk_stopwords
+nltk_stopwords = frozenset(nltk_stopwords.words('english'))
+from gensim.parsing import STOPWORDS as gensim_stopwords
+stopwords = nltk_stopwords | gensim_stopwords
 
 from nltk.stem.lancaster import LancasterStemmer as Stemmer
 stemmer = Stemmer()
+def stem(word):
+    word = stemmer.stem(word)
+    return word
 
 def tokenize_text(text):
     text = text.lower()
@@ -38,7 +43,7 @@ def tokenize_text(text):
             del text[i]
             continue
 
-        text[i] = stemmer.stem(word)
+        text[i] = stem(word)
         i += 1
 
     return text
